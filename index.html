@@ -199,7 +199,7 @@
     <script>
         // Inisialisasi EmailJS
         // GANTI DENGAN USER ID ANDA dari dashboard EmailJS
-        emailjs.init("YOUR_PUBLIC_KEY_HERE");
+        emailjs.init("Latf57rkdKfcGgWpN");
         
         document.getElementById('emailForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -226,7 +226,7 @@
             };
             
             // GANTI DENGAN SERVICE ID DAN TEMPLATE ID ANDA dari dashboard EmailJS
-            emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams)
+            emailjs.send('service_qkvitln', 'template_3h69mlq', templateParams)
                 .then(function(response) {
                     console.log('SUCCESS!', response.status, response.text);
                     
