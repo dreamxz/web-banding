@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulir Pengiriman Email</title>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .email-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+        }
+        
+        h1 {
+            color: #1a73e8;
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 24px;
+            font-weight: 500;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #1a73e8;
+            box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+        }
+        
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        .btn-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .send-btn {
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 12px 30px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .send-btn:hover {
+            background-color: #0d62c9;
+        }
+        
+        .send-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        
+        .note {
+            margin-top: 25px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-left: 4px solid #1a73e8;
+            font-size: 14px;
+            color: #555;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .setup-instructions {
+            margin-top: 25px;
+            padding: 15px;
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            font-size: 14px;
+            color: #856404;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .status-message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            display: none;
+        }
+        
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        @media (max-width: 480px) {
+            .email-container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <h1>Kirim Email</h1>
+        
+        <form id="emailForm">
+            <div class="form-group">
+                <label for="to">Kepada</label>
+                <input type="email" id="to" placeholder="Masukkan email penerima" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="subject">Subjek</label>
+                <input type="text" id="subject" placeholder="Masukkan subjek email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="message">Pesan</label>
+                <textarea id="message" placeholder="Tulis pesan Anda di sini..." required></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="template">Template</label>
+                <select id="template">
+                    <option value="default">Default</option>
+                    <option value="formal">Formal</option>
+                    <option value="informal">Informal</option>
+                    <option value="business">Bisnis</option>
+                </select>
+            </div>
+            
+            <div class="btn-container">
+                <button type="submit" class="send-btn" id="submitBtn">Kirim Email</button>
+            </div>
+            
+            <div id="statusMessage" class="status-message"></div>
+        </form>
+        
+        <div class="setup-instructions">
+            <strong>Panduan Setup:</strong><br>
+            1. Daftar akun gratis di <a href="https://www.emailjs.com/" target="_blank">EmailJS.com</a><br>
+            2. Dapatakan Service ID, Template ID, dan User ID<br>
+            3. Ganti nilai di bagian JavaScript dengan ID Anda
+        </div>
+        
+        <div class="note">
+            <strong>Note:</strong><br>
+            Jika pesan tidak ada di bagian utama Gmail kamu, maka mungkin pesan tersebut terkirim ke folder "Promosi" atau "Spam". Periksa folder tersebut atau gunakan fitur pencarian.
+        </div>
+    </div>
+
+    <script>
+        // Inisialisasi EmailJS
+        // GANTI DENGAN USER ID ANDA dari dashboard EmailJS
+        emailjs.init("YOUR_PUBLIC_KEY_HERE");
+        
+        document.getElementById('emailForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const statusMessage = document.getElementById('statusMessage');
+            
+            // Tampilkan status loading
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Mengirim...';
+            statusMessage.style.display = 'none';
+            
+            const to = document.getElementById('to').value;
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+            const template = document.getElementById('template').value;
+            
+            // Parameter untuk EmailJS
+            const templateParams = {
+                to_email: to,
+                subject: subject,
+                message: message,
+                template: template
+            };
+            
+            // GANTI DENGAN SERVICE ID DAN TEMPLATE ID ANDA dari dashboard EmailJS
+            emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams)
+                .then(function(response) {
+                    console.log('SUCCESS!', response.status, response.text);
+                    
+                    // Tampilkan pesan sukses
+                    statusMessage.textContent = 'Email berhasil dikirim!';
+                    statusMessage.className = 'status-message success';
+                    statusMessage.style.display = 'block';
+                    
+                    // Reset form setelah pengiriman
+                    document.getElementById('emailForm').reset();
+                })
+                .catch(function(error) {
+                    console.log('FAILED...', error);
+                    
+                    // Tampilkan pesan error
+                    statusMessage.textContent = 'Gagal mengirim email. Silakan coba lagi.';
+                    statusMessage.className = 'status-message error';
+                    statusMessage.style.display = 'block';
+                })
+                .finally(function() {
+                    // Reset tombol
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Kirim Email';
+                });
+        });
+        
+        // Opsional: Mengubah template pesan berdasarkan pilihan
+        document.getElementById('template').addEventListener('change', function() {
+            const template = this.value;
+            const messageTextarea = document.getElementById('message');
+            
+            if (messageTextarea.value === '' || confirm('Apakah Anda ingin mengganti pesan dengan template yang dipilih?')) {
+                switch(template) {
+                    case 'formal':
+                        messageTextarea.value = 'Kepada Yth.\n\nDengan hormat,\n\n\n\nHormat kami,';
+                        break;
+                    case 'informal':
+                        messageTextarea.value = 'Hai,\n\n\n\nSalam,';
+                        break;
+                    case 'business':
+                        messageTextarea.value = 'Kepada Yth.\n\nSubject: \n\nDear Sir/Madam,\n\n\n\nBest regards,';
+                        break;
+                    default:
+                        messageTextarea.value = '';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
