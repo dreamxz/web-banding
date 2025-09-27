@@ -3,9 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulir Pengiriman Email</title>
+    <title>Perbandingan WhatsApp vs Email Support</title>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
+        :root {
+            --whatsapp: #25D366;
+            --email: #EA4335;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --gray: #6c757d;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -14,29 +23,148 @@
         }
         
         body {
-            background-color: #f0f2f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            background-color: #f5f5f5;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
             padding: 20px;
         }
         
-        .email-container {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 600px;
-            padding: 30px;
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--whatsapp), #128C7E);
+            color: white;
+            text-align: center;
+            padding: 60px 20px;
+            margin-bottom: 40px;
+            border-radius: 0 0 20px 20px;
+            box-shadow: var(--shadow);
         }
         
-        h1 {
-            color: #1a73e8;
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        /* Tabs */
+        .tabs {
+            display: flex;
+            margin-bottom: 30px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 15px;
             text-align: center;
-            margin-bottom: 25px;
-            font-size: 24px;
-            font-weight: 500;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            background: var(--dark);
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Tabel Perbandingan */
+        .comparison-table {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            margin-bottom: 40px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background-color: var(--light);
+            font-weight: 600;
+        }
+        
+        .feature-header {
+            background-color: var(--dark);
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        .whatsapp-header {
+            background-color: var(--whatsapp);
+            color: white;
+            text-align: center;
+        }
+        
+        .email-header {
+            background-color: var(--email);
+            color: white;
+            text-align: center;
+        }
+        
+        .whatsapp-feature {
+            background-color: rgba(37, 211, 102, 0.1);
+        }
+        
+        .email-feature {
+            background-color: rgba(234, 67, 53, 0.1);
+        }
+        
+        .advantage {
+            font-weight: 600;
+        }
+        
+        .whatsapp-advantage {
+            color: var(--whatsapp);
+        }
+        
+        .email-advantage {
+            color: var(--email);
+        }
+        
+        /* Formulir Email */
+        .email-form-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .email-form-container h2 {
+            color: var(--email);
+            margin-bottom: 20px;
+            text-align: center;
         }
         
         .form-group {
@@ -61,8 +189,8 @@
         
         input:focus, textarea:focus, select:focus {
             outline: none;
-            border-color: #1a73e8;
-            box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+            border-color: var(--email);
+            box-shadow: 0 0 0 2px rgba(234, 67, 53, 0.2);
         }
         
         textarea {
@@ -76,7 +204,7 @@
         }
         
         .send-btn {
-            background-color: #1a73e8;
+            background-color: var(--email);
             color: white;
             border: none;
             border-radius: 5px;
@@ -87,7 +215,7 @@
         }
         
         .send-btn:hover {
-            background-color: #0d62c9;
+            background-color: #d33426;
         }
         
         .send-btn:disabled {
@@ -99,7 +227,7 @@
             margin-top: 25px;
             padding: 15px;
             background-color: #f8f9fa;
-            border-left: 4px solid #1a73e8;
+            border-left: 4px solid var(--email);
             font-size: 14px;
             color: #555;
             border-radius: 0 5px 5px 0;
@@ -135,72 +263,310 @@
             border: 1px solid #f5c6cb;
         }
         
-        @media (max-width: 480px) {
-            .email-container {
-                padding: 20px;
+        /* Bagian Rekomendasi */
+        .recommendations {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .recommendation-card {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+        }
+        
+        .recommendation-card h3 {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid;
+        }
+        
+        .whatsapp-card h3 {
+            color: var(--whatsapp);
+            border-color: var(--whatsapp);
+        }
+        
+        .email-card h3 {
+            color: var(--email);
+            border-color: var(--email);
+        }
+        
+        .recommendation-card ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        
+        .recommendation-card li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        .recommendation-card li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: inherit;
+            font-weight: bold;
+        }
+        
+        .whatsapp-card li:before {
+            color: var(--whatsapp);
+        }
+        
+        .email-card li:before {
+            color: var(--email);
+        }
+        
+        /* Bagian Kesimpulan */
+        .conclusion {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        
+        .conclusion h2 {
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: var(--dark);
+            color: white;
+            border-radius: 10px 10px 0 0;
+        }
+        
+        /* Responsif */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
             }
             
-            h1 {
-                font-size: 20px;
+            header p {
+                font-size: 1rem;
+            }
+            
+            table {
+                font-size: 0.9rem;
+            }
+            
+            th, td {
+                padding: 10px;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .comparison-table {
+                overflow-x: auto;
+            }
+            
+            table {
+                min-width: 500px;
+            }
+            
+            .email-form-container {
+                padding: 20px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="email-container">
-        <h1>Kirim Email</h1>
-        
-        <form id="emailForm">
-            <div class="form-group">
-                <label for="to">Kepada</label>
-                <input type="email" id="to" placeholder="Masukkan email penerima" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="subject">Subjek</label>
-                <input type="text" id="subject" placeholder="Masukkan subjek email" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="message">Pesan</label>
-                <textarea id="message" placeholder="Tulis pesan Anda di sini..." required></textarea>
-            </div>
-            
-            <div class="form-group">
-                <label for="template">Template</label>
-                <select id="template">
-                    <option value="default">Default</option>
-                    <option value="formal">Formal</option>
-                    <option value="informal">Informal</option>
-                    <option value="business">Bisnis</option>
-                </select>
-            </div>
-            
-            <div class="btn-container">
-                <button type="submit" class="send-btn" id="submitBtn">Kirim Email</button>
-            </div>
-            
-            <div id="statusMessage" class="status-message"></div>
-        </form>
-        
-        <div class="setup-instructions">
-            <strong>Panduan Setup:</strong><br>
-            1. Daftar akun gratis di <a href="https://www.emailjs.com/" target="_blank">EmailJS.com</a><br>
-            2. Dapatakan Service ID, Template ID, dan User ID<br>
-            3. Ganti nilai di bagian JavaScript dengan ID Anda
+    <header>
+        <div class="container">
+            <h1>WhatsApp vs Email untuk Layanan Dukungan</h1>
+            <p>Perbandingan mendalam antara dua platform komunikasi yang populer untuk layanan dukungan pelanggan</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="tabs">
+            <div class="tab active" data-tab="comparison">Perbandingan</div>
+            <div class="tab" data-tab="email-form">Kirim Email Support</div>
         </div>
         
-        <div class="note">
-            <strong>Note:</strong><br>
-            Jika pesan tidak ada di bagian utama Gmail kamu, maka mungkin pesan tersebut terkirim ke folder "Promosi" atau "Spam". Periksa folder tersebut atau gunakan fitur pencarian.
+        <div class="tab-content active" id="comparison">
+            <section class="comparison-table">
+                <table>
+                    <tr>
+                        <th class="feature-header" colspan="3">Perbandingan Fitur</th>
+                    </tr>
+                    <tr>
+                        <th>Aspek</th>
+                        <th class="whatsapp-header">WhatsApp</th>
+                        <th class="email-header">Email</th>
+                    </tr>
+                    <tr>
+                        <td>Kecepatan Respons</td>
+                        <td class="whatsapp-feature"><span class="advantage whatsapp-advantage">Sangat Cepat</span> - Biasanya dijawab dalam hitungan menit</td>
+                        <td class="email-feature"><span class="advantage email-advantage">Cukup Cepat</span> - Biasanya dijawab dalam beberapa jam</td>
+                    </tr>
+                    <tr>
+                        <td>Kemudahan Penggunaan</td>
+                        <td class="whatsapp-feature"><span class="advantage whatsapp-advantage">Sangat Mudah</span> - Antarmuka yang familiar bagi kebanyakan pengguna</td>
+                        <td class="email-feature"><span class="advantage email-advantage">Mudah</span> - Tetapi memerlukan sedikit pengetahuan teknis</td>
+                    </tr>
+                    <tr>
+                        <td>Fitur Multimedia</td>
+                        <td class="whatsapp-feature"><span class="advantage whatsapp-advantage">Lengkap</span> - Mendukung gambar, video, audio, dan dokumen</td>
+                        <td class="email-feature"><span class="advantage email-advantage">Baik</span> - Mendukung lampiran file, tetapi dengan batasan ukuran</td>
+                    </tr>
+                    <tr>
+                        <td>Kapasitas Penyimpanan</td>
+                        <td class="whatsapp-feature">Terbatas - Bergantung pada penyimpanan perangkat pengguna</td>
+                        <td class="email-feature"><span class="advantage email-advantage">Luas</span> - Penyimpanan cloud dengan kapasitas besar</td>
+                    </tr>
+                    <tr>
+                        <td>Keamanan</td>
+                        <td class="whatsapp-feature"><span class="advantage whatsapp-advantage">End-to-End Encryption</span> - Pesan dienkripsi dari pengirim ke penerima</td>
+                        <td class="email-feature">Enkripsi standar - Bergantung pada penyedia layanan email</td>
+                    </tr>
+                    <tr>
+                        <td>Integrasi dengan Sistem Lain</td>
+                        <td class="whatsapp-feature">Terbatas - API Business tersedia dengan biaya</td>
+                        <td class="email-feature"><span class="advantage email-advantage">Luas</span> - Mudah diintegrasikan dengan berbagai sistem dan alat</td>
+                    </tr>
+                    <tr>
+                        <td>Biaya</td>
+                        <td class="whatsapp-feature">Gratis untuk pengguna pribadi, berbayar untuk bisnis</td>
+                        <td class="email-feature"><span class="advantage email-advantage">Gratis atau murah</span> - Banyak penyedia layanan email gratis</td>
+                    </tr>
+                    <tr>
+                        <td>Jangkauan</td>
+                        <td class="whatsapp-feature"><span class="advantage whatsapp-advantage">Sangat Luas</span> - Lebih dari 2 miliar pengguna di seluruh dunia</td>
+                        <td class="email-feature"><span class="advantage email-advantage">Universal</span> - Hampir semua pengguna internet memiliki email</td>
+                    </tr>
+                </table>
+            </section>
+            
+            <section class="recommendations">
+                <div class="recommendation-card whatsapp-card">
+                    <h3>Kapan Memilih WhatsApp</h3>
+                    <ul>
+                        <li>Dukungan real-time yang cepat dan personal</li>
+                        <li>Interaksi dengan pelanggan yang sudah menggunakan WhatsApp</li>
+                        <li>Untuk bisnis dengan volume pertanyaan sederhana hingga menengah</li>
+                        <li>Ketika perlu berbagi media (gambar, video) dengan mudah</li>
+                        <li>Untuk komunikasi yang lebih informal dan langsung</li>
+                    </ul>
+                </div>
+                
+                <div class="recommendation-card email-card">
+                    <h3>Kapan Memilih Email</h3>
+                    <ul>
+                        <li>Untuk pertanyaan kompleks yang memerlukan penjelasan rinci</li>
+                        <li>Ketika perlu melacak riwayat komunikasi secara terorganisir</li>
+                        <li>Untuk bisnis dengan volume pertanyaan tinggi</li>
+                        <li>Ketika perlu berbagi file besar atau dokumen penting</li>
+                        <li>Untuk komunikasi formal dan resmi</li>
+                    </ul>
+                </div>
+            </section>
+            
+            <section class="conclusion">
+                <h2>Kesimpulan</h2>
+                <p>Baik WhatsApp maupun Email memiliki kelebihan dan kekurangan masing-masing untuk layanan dukungan pelanggan. Pilihan terbaik tergantung pada kebutuhan spesifik bisnis Anda, jenis pelanggan, dan sumber daya yang tersedia.</p>
+                <p><strong>Rekomendasi:</strong> Pertimbangkan untuk menggunakan kedua platform secara bersamaan - WhatsApp untuk dukungan cepat dan personal, sementara Email untuk kasus yang lebih kompleks dan formal.</p>
+            </section>
+        </div>
+        
+        <div class="tab-content" id="email-form">
+            <section class="email-form-container">
+                <h2>Kirim Email ke Support WhatsApp</h2>
+                
+                <form id="emailForm">
+                    <div class="form-group">
+                        <label for="to">Kepada (Email Support WhatsApp)</label>
+                        <input type="email" id="to" value="support@whatsapp.com" readonly>
+                        <small>Email resmi support WhatsApp</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="from">Dari (Email Anda)</label>
+                        <input type="email" id="from" placeholder="Masukkan email Anda" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="subject">Subjek</label>
+                        <input type="text" id="subject" placeholder="Masukkan subjek email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Pesan</label>
+                        <textarea id="message" placeholder="Tulis pesan Anda di sini..." required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="template">Template</label>
+                        <select id="template">
+                            <option value="default">Default</option>
+                            <option value="problem">Laporan Masalah</option>
+                            <option value="question">Pertanyaan</option>
+                            <option value="suggestion">Saran</option>
+                        </select>
+                    </div>
+                    
+                    <div class="btn-container">
+                        <button type="submit" class="send-btn" id="submitBtn">Kirim Email</button>
+                    </div>
+                    
+                    <div id="statusMessage" class="status-message"></div>
+                </form>
+                
+                <div class="setup-instructions">
+                    <strong>Panduan Setup EmailJS:</strong><br>
+                    1. Daftar akun gratis di <a href="https://www.emailjs.com/" target="_blank">EmailJS.com</a><br>
+                    2. Dapatkan Service ID, Template ID, dan Public Key<br>
+                    3. Ganti nilai di bagian JavaScript dengan kredensial Anda
+                </div>
+                
+                <div class="note">
+                    <strong>Note:</strong><br>
+                    Formulir ini menggunakan EmailJS untuk mengirim email secara langsung dari browser. Email akan dikirim ke alamat support WhatsApp yang ditentukan.
+                </div>
+            </section>
         </div>
     </div>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 Perbandingan WhatsApp vs Email untuk Dukungan Pelanggan</p>
+        </div>
+    </footer>
 
     <script>
         // Inisialisasi EmailJS
-        // GANTI DENGAN USER ID ANDA dari dashboard EmailJS
+        // GANTI DENGAN PUBLIC KEY ANDA dari dashboard EmailJS
         emailjs.init("Latf57rkdKfcGgWpN");
         
+        // Tab functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs and contents
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked tab and corresponding content
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab).classList.add('active');
+            });
+        });
+        
+        // Email form submission
         document.getElementById('emailForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -213,6 +579,7 @@
             statusMessage.style.display = 'none';
             
             const to = document.getElementById('to').value;
+            const from = document.getElementById('from').value;
             const subject = document.getElementById('subject').value;
             const message = document.getElementById('message').value;
             const template = document.getElementById('template').value;
@@ -220,29 +587,33 @@
             // Parameter untuk EmailJS
             const templateParams = {
                 to_email: to,
+                from_email: from,
                 subject: subject,
                 message: message,
                 template: template
             };
             
             // GANTI DENGAN SERVICE ID DAN TEMPLATE ID ANDA dari dashboard EmailJS
-            emailjs.send('service_qkvitln', 'template_3h69mlq', templateParams)
+            emailjs.send('service_qkvitln', 'template_piiaftk', templateParams)
                 .then(function(response) {
                     console.log('SUCCESS!', response.status, response.text);
                     
                     // Tampilkan pesan sukses
-                    statusMessage.textContent = 'Email berhasil dikirim!';
+                    statusMessage.textContent = 'Email berhasil dikirim ke support WhatsApp!';
                     statusMessage.className = 'status-message success';
                     statusMessage.style.display = 'block';
                     
-                    // Reset form setelah pengiriman
-                    document.getElementById('emailForm').reset();
+                    // Reset form setelah pengiriman (kecuali field "to")
+                    document.getElementById('from').value = '';
+                    document.getElementById('subject').value = '';
+                    document.getElementById('message').value = '';
+                    document.getElementById('template').value = 'default';
                 })
                 .catch(function(error) {
                     console.log('FAILED...', error);
                     
                     // Tampilkan pesan error
-                    statusMessage.textContent = 'Gagal mengirim email. Silakan coba lagi.';
+                    statusMessage.textContent = 'Gagal mengirim email. Silakan coba lagi atau periksa konfigurasi EmailJS.';
                     statusMessage.className = 'status-message error';
                     statusMessage.style.display = 'block';
                 })
@@ -260,14 +631,14 @@
             
             if (messageTextarea.value === '' || confirm('Apakah Anda ingin mengganti pesan dengan template yang dipilih?')) {
                 switch(template) {
-                    case 'formal':
-                        messageTextarea.value = 'Kepada Yth.\n\nDengan hormat,\n\n\n\nHormat kami,';
+                    case 'problem':
+                        messageTextarea.value = 'Kepada Tim Support WhatsApp,\n\nSaya mengalami masalah dengan akun WhatsApp saya. Berikut detail masalahnya:\n\n1. \n2. \n3. \n\nTerima kasih atas bantuannya.\n\nSalam,\n[Nama Anda]';
                         break;
-                    case 'informal':
-                        messageTextarea.value = 'Hai,\n\n\n\nSalam,';
+                    case 'question':
+                        messageTextarea.value = 'Kepada Tim Support WhatsApp,\n\nSaya memiliki pertanyaan mengenai fitur WhatsApp. Berikut pertanyaan saya:\n\n1. \n2. \n3. \n\nTerima kasih atas perhatiannya.\n\nSalam,\n[Nama Anda]';
                         break;
-                    case 'business':
-                        messageTextarea.value = 'Kepada Yth.\n\nSubject: \n\nDear Sir/Madam,\n\n\n\nBest regards,';
+                    case 'suggestion':
+                        messageTextarea.value = 'Kepada Tim Pengembangan WhatsApp,\n\nSaya ingin memberikan saran untuk meningkatkan WhatsApp. Berikut saran saya:\n\n1. \n2. \n3. \n\nTerima kasih telah mempertimbangkan saran saya.\n\nSalam,\n[Nama Anda]';
                         break;
                     default:
                         messageTextarea.value = '';
@@ -276,4 +647,4 @@
         });
     </script>
 </body>
-</html>
+    </html>
